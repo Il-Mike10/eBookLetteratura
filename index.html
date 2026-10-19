@@ -115,6 +115,9 @@
   #leopardi-site .ls-timeline > .ls-card:nth-of-type(even) { border-radius:20px 8px 20px 20px; }
   #leopardi-site .ls-subject-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px 18px; align-items:start; }
   #leopardi-site .ls-subject-cards > .ls-card { margin:8px 0; }
+  #leopardi-site .ls-subject-cards > .ls-card:nth-child(3) {
+    grid-column:1 / -1; width:calc(50% - 9px); justify-self:center;
+  }
   #leopardi-site .ls-artist-meta { color:var(--muted); font-size:12px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; margin:-3px 0 16px; }
   #leopardi-site .ls-artist-list { columns:2; column-gap:18px; counter-reset:artist; margin-top:18px; }
   #leopardi-site .ls-artist-card { display:inline-block; width:100%; break-inside:avoid; position:relative; margin:0 0 18px; padding:24px; overflow:hidden; counter-increment:artist; }
@@ -180,6 +183,7 @@
   }
   @media(max-width:760px) {
     #leopardi-site .ls-timeline, #leopardi-site .ls-subject-cards { grid-template-columns:1fr; }
+    #leopardi-site .ls-subject-cards > .ls-card:nth-child(3) { width:100%; }
     #leopardi-site .ls-artist-list { columns:1; }
     #leopardi-site .ls-grid2 { grid-template-columns:1fr; }
     #leopardi-site .ls-map { height:clamp(520px,78vh,660px); }
@@ -352,6 +356,14 @@
       context:"Il dipinto rievoca le Tre gloriose giornate di Parigi del luglio 1830. Una figura allegorica della Libertà avanza alla testa di persone di classi diverse, tra barricate e fumo: la composizione celebra l'azione politica collettiva e insieme mostra il suo costo in vite umane.",
       connection:"Il confronto più significativo è con La ginestra. Entrambe le opere mettono al centro una collettività, ma con accenti differenti: Delacroix raffigura un popolo in lotta per un cambiamento politico; Leopardi invita gli uomini a riconoscersi alleati contro la comune fragilità, senza illudersi che la solidarietà possa sconfiggere la Natura.",
       difference:"La Libertà di Delacroix è un'allegoria della rivoluzione e della speranza politica. La «social catena» leopardiana non è un programma rivoluzionario: è un patto di solidarietà fondato sulla consapevolezza dei limiti umani. Il raffronto evidenzia una tensione, non una coincidenza."
+    },
+    {
+      name:"Jules Verne",
+      work:"Il giro del mondo in 80 giorni (1872–73)",
+      place:"Francia · Romanzo d'avventura",
+      context:"Phileas Fogg scommette di poter compiere il giro del mondo in ottanta giorni e parte con il domestico Passepartout. Treni e piroscafi scandiscono una corsa contro il tempo che attraversa continenti e culture; il romanzo fu pubblicato a puntate tra il 1872 e il 1873.",
+      connection:"Il viaggio dell'Islandese e quello di Fogg attraversano luoghi e climi lontani, ma con scopi diversi. L'Islandese cerca invano una vita tranquilla; Fogg affronta il viaggio come una sfida organizzata, resa possibile dai trasporti moderni.",
+      difference:"Verne costruisce un'avventura in cui intraprendenza e mezzi tecnici permettono di superare gli imprevisti. Nel Dialogo leopardiano, invece, il viaggio mostra che nessun luogo mette l'uomo al riparo dalla Natura: il confronto accosta due visioni letterarie, non indica un'influenza diretta."
     }
   ];
   let page="home", eventOpen=-1, tab="quiz", qi=0, qscore=0, qselected=-1, scoreSaved=false, scoreError="", tfIndex=0, tfScore=0, tfAnswer=null, matchSelected=-1, matched=[], errors=0, subject=0, dialogueTab=0, selectedStop=-1, speechReading=false;
@@ -540,9 +552,9 @@
     } else {
       const artistTab=subjects.length;
       const subjectTabs=subjects.map((s,i)=>`<button class="ls-chip ${subject===i?"active":""}" data-subject="${i}">${s[0]}</button>`).join("")+
-        `<button class="ls-chip ${subject===artistTab?"active":""}" data-subject="${artistTab}">🖼️ Artisti dell'800</button>`;
+        `<button class="ls-chip ${subject===artistTab?"active":""}" data-subject="${artistTab}">🖼️ Artisti e autori dell'800</button>`;
       const subjectContent=subject===artistTab
-        ? `<div class="ls-callout"><b>Sei incontri, sei modi diversi di guardare il mondo</b><p>Fai un giro tra quadri, musica e idee dell'Ottocento. Per ogni artista trovi il contesto, un filo che lo avvicina a Leopardi e una differenza che aiuta a non confondere le loro voci: sono confronti, non necessariamente influenze dirette.</p></div><div class="ls-artist-list">${artistConnections.map(a=>`<article class="ls-card ls-artist-card"><h3>${esc(a.name)}</h3><p><b>${esc(a.work)}</b></p><p class="ls-artist-meta">${esc(a.place)}</p><div class="ls-artist-block"><h4>Prima, guarda l'opera</h4><p>${esc(a.context)}</p></div><div class="ls-artist-block"><h4>Il filo con Leopardi</h4><p>${esc(a.connection)}</p></div><div class="ls-artist-block"><h4>Dove le strade si dividono</h4><p>${esc(a.difference)}</p></div></article>`).join("")}</div>`
+        ? `<div class="ls-callout"><b>Sette incontri, sette modi diversi di guardare il mondo</b><p>Fai un giro tra arte, musica, letteratura e idee dell'Ottocento. Per ogni artista o autore trovi il contesto, un filo che lo avvicina a Leopardi e una differenza che aiuta a non confondere le loro voci: sono confronti, non necessariamente influenze dirette.</p></div><div class="ls-artist-list">${artistConnections.map(a=>`<article class="ls-card ls-artist-card"><h3>${esc(a.name)}</h3><p><b>${esc(a.work)}</b></p><p class="ls-artist-meta">${esc(a.place)}</p><div class="ls-artist-block"><h4>Contesto dell'opera</h4><p>${esc(a.context)}</p></div><div class="ls-artist-block"><h4>Il filo con Leopardi</h4><p>${esc(a.connection)}</p></div><div class="ls-artist-block"><h4>Dove le strade si dividono</h4><p>${esc(a.difference)}</p></div></article>`).join("")}</div>`
         : `<div class="ls-subject-cards">${subjects[subject][1].map(b=>`<article class="ls-card"><h3>${b[0]}</h3><p>${b[1]}</p></article>`).join("")}</div>`;
       content.innerHTML=`<div class="ls-wrap">${heading("IV","Mappa delle Materie","Segui le curiosità: dall'arte ai vulcani, dalle idee alle emozioni. Scegli una traccia e vedi dove ti porta.")}<div class="ls-tabs">${subjectTabs}</div>${subjectContent}</div>`;
     }
