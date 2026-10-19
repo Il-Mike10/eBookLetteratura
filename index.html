@@ -42,8 +42,7 @@
     gap: 12px;
     min-height: 64px;
     padding: 10px clamp(14px,3vw,30px);
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 5;
   }
   #leopardi-site .ls-brand { color: var(--ink); text-decoration: none; font: 700 22px Georgia,serif; white-space: nowrap; letter-spacing:.01em; }
@@ -55,11 +54,11 @@
   #leopardi-site .ls-links button:hover, #leopardi-site .ls-links button[aria-current="page"] { color: white; background: var(--rust); }
   #leopardi-site .ls-progress { height: 3px; background: #e9dfd0; }
   #leopardi-site .ls-progress i { display:block; height:100%; width:0; background: linear-gradient(90deg,var(--rust),var(--gold)); }
-  #leopardi-site .ls-page { flex: 1; min-height: 560px; padding: clamp(24px,4vw,48px) 18px 58px; }
+  #leopardi-site .ls-page { flex: 1; min-height: 0; padding: clamp(24px,4vw,48px) clamp(14px,2.5vw,30px) 58px; }
   #leopardi-site .ls-wrap { max-width: 1120px; margin: auto; }
   #leopardi-site .ls-home { padding-top: 16px; }
   #leopardi-site .ls-map {
-    height: 660px; max-height: 78vh; min-height: 500px; position: relative; overflow: hidden;
+    height: clamp(480px,62vw,700px); max-height: 78vh; min-height: 460px; position: relative; overflow: hidden;
     border: 0; border-radius: 28px; box-shadow: none;
     background: radial-gradient(ellipse at 48% 45%,rgba(208,176,119,.4),transparent 48%),
       radial-gradient(ellipse at 15% 85%,rgba(88,112,82,.55),transparent 48%),
@@ -82,14 +81,14 @@
     animation:ls-float 4s ease-in-out infinite;
   }
   #leopardi-site .ls-node:hover { outline:2px solid var(--gold); transform:translate(-50%,-50%) scale(1.06); }
-  #leopardi-site .ls-center { left:50%; top:47%; width:220px; height:220px; border-width:2px; }
-  #leopardi-site .ls-center b { font:700 29px/1.04 Georgia,serif; letter-spacing:.02em; }
+  #leopardi-site .ls-center { left:50%; top:47%; width:clamp(170px,20vw,220px); height:clamp(170px,20vw,220px); border-width:2px; }
+  #leopardi-site .ls-center b { font:700 clamp(23px,2.6vw,29px)/1.04 Georgia,serif; letter-spacing:.02em; }
   #leopardi-site .ls-center small { margin-top:9px; font-size:12px; }
-  #leopardi-site .ls-n-vita { left:20%; top:49%; width:120px; height:120px; }
-  #leopardi-site .ls-n-dialogo { left:81%; top:29%; width:142px; height:142px; }
-  #leopardi-site .ls-n-giochi { left:80%; top:74%; width:120px; height:120px; }
-  #leopardi-site .ls-n-materie { left:50%; top:12%; width:118px; height:118px; }
-  #leopardi-site .ls-n-bio { left:6%; top:10%; width:70px; height:70px; font-size:12px; }
+  #leopardi-site .ls-n-vita { left:20%; top:49%; width:clamp(96px,11vw,120px); height:clamp(96px,11vw,120px); }
+  #leopardi-site .ls-n-dialogo { left:81%; top:29%; width:clamp(112px,13vw,142px); height:clamp(112px,13vw,142px); }
+  #leopardi-site .ls-n-giochi { left:80%; top:74%; width:clamp(96px,11vw,120px); height:clamp(96px,11vw,120px); }
+  #leopardi-site .ls-n-materie { left:50%; top:12%; width:clamp(96px,11vw,118px); height:clamp(96px,11vw,118px); }
+  #leopardi-site .ls-n-bio { left:6%; top:10%; width:clamp(56px,6.4vw,70px); height:clamp(56px,6.4vw,70px); font-size:12px; }
   #leopardi-site .ls-n-bio.b2 { top:28%; } #leopardi-site .ls-n-bio.b3 { top:47%; }
   #leopardi-site .ls-n-bio.b4 { top:66%; } #leopardi-site .ls-n-bio.b5 { top:85%; }
   #leopardi-site .ls-hint { text-align:center; color:var(--muted); font-size:12px; margin:10px 0 0; }
@@ -109,8 +108,13 @@
     border:1px solid var(--line); border-radius:20px 20px 20px 8px; padding:clamp(18px,2.5vw,25px);
     margin:16px 0; box-shadow:0 5px 18px #513e2010; transition:transform .2s ease,box-shadow .2s ease;
   }
-  #leopardi-site .ls-card:hover { transform:translateY(-2px); box-shadow:0 10px 24px #513e2018; }
   #leopardi-site .ls-card h3 { color:var(--rust); font-size:clamp(21px,2.4vw,26px); line-height:1.16; margin:0 0 10px; }
+  #leopardi-site .ls-timeline { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:22px; align-items:start; }
+  #leopardi-site .ls-timeline > .ls-heading { grid-column:1/-1; width:100%; }
+  #leopardi-site .ls-timeline > .ls-card { margin:0 0 18px; position:relative; }
+  #leopardi-site .ls-timeline > .ls-card:nth-of-type(even) { border-radius:20px 8px 20px 20px; }
+  #leopardi-site .ls-subject-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px 18px; align-items:start; }
+  #leopardi-site .ls-subject-cards > .ls-card { margin:8px 0; }
   #leopardi-site .ls-artist-meta { color:var(--muted); font-size:12px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; margin:-3px 0 16px; }
   #leopardi-site .ls-artist-list { columns:2; column-gap:18px; counter-reset:artist; margin-top:18px; }
   #leopardi-site .ls-artist-card { display:inline-block; width:100%; break-inside:avoid; position:relative; margin:0 0 18px; padding:24px; overflow:hidden; counter-increment:artist; }
@@ -129,6 +133,7 @@
     background:var(--rust); color:white; border:1px solid var(--rust); border-radius:22px;
     padding:9px 15px; font-weight:600;
   }
+  #leopardi-site .ls-btn, #leopardi-site .ls-chip, #leopardi-site .ls-option { transition:background-color .16s ease,color .16s ease,border-color .16s ease,filter .16s ease; }
   #leopardi-site .ls-btn:hover { filter:brightness(.92); }
   #leopardi-site .ls-chip { background:var(--paper); color:var(--ink); border-color:var(--line); margin:3px; }
   #leopardi-site .ls-chip.active, #leopardi-site .ls-chip:hover { background:var(--rust); color:white; border-color:var(--rust); }
@@ -143,10 +148,10 @@
   #leopardi-site .ls-option.selected { background:#a54832; color:#fff; border-color:#a54832; }
   #leopardi-site .ls-option.correct { background:#e5f3e6; border-color:#398248; }
   #leopardi-site .ls-option.wrong { background:#fce9e5; border-color:#b84332; }
-  #leopardi-site .ls-answers { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  #leopardi-site .ls-answers { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
   #leopardi-site .ls-answers button { min-height:54px; }
-  #leopardi-site .ls-input { width:min(100%,280px); border:1px solid var(--line); border-radius:22px; padding:9px 13px; background:var(--paper); color:var(--ink); }
-  #leopardi-site .ls-earth { position:relative; height:390px; color:white; overflow:hidden;
+  #leopardi-site .ls-input { width:min(100%,320px); min-height:46px; border:1px solid var(--line); border-radius:22px; padding:9px 13px; background:var(--paper); color:var(--ink); }
+  #leopardi-site .ls-earth { position:relative; height:clamp(300px,42vw,440px); color:white; overflow:hidden;
     border-radius:18px; background:radial-gradient(ellipse at 50% 45%,#14283c,#070d18 72%); }
   #leopardi-site .ls-earth canvas { position:absolute; inset:0; display:block; width:100%; height:100%; touch-action:none; }
   #leopardi-site .ls-earth canvas.ls-earth-base { pointer-events:none; }
@@ -166,13 +171,23 @@
   #leopardi-site .ls-stop-close { position:absolute; right:12px; top:10px; border:0; background:transparent; color:var(--muted); font-size:22px; }
   #leopardi-site .ls-footer { padding:18px; text-align:center; border-top:0; color:var(--muted); font-size:13px; }
   #leopardi-site .ls-hidden { display:none !important; }
+  @media(min-width:761px) {
+    #leopardi-site .ls-nav { padding-left:max(24px,calc((100vw - 1200px)/2)); padding-right:max(24px,calc((100vw - 1200px)/2)); }
+  }
   @media(max-width:900px) {
     #leopardi-site .ls-page { padding:22px clamp(14px,3vw,24px) 40px; }
     #leopardi-site .ls-wrap { max-width:100%; }
   }
   @media(max-width:760px) {
+    #leopardi-site .ls-timeline, #leopardi-site .ls-subject-cards { grid-template-columns:1fr; }
     #leopardi-site .ls-artist-list { columns:1; }
     #leopardi-site .ls-grid2 { grid-template-columns:1fr; }
+    #leopardi-site .ls-map { height:clamp(520px,78vh,660px); }
+    #leopardi-site .ls-center { width:180px; height:180px; }
+    #leopardi-site .ls-n-vita, #leopardi-site .ls-n-giochi { width:104px; height:104px; }
+    #leopardi-site .ls-n-dialogo { width:122px; height:122px; }
+    #leopardi-site .ls-n-materie { width:104px; height:104px; }
+    #leopardi-site .ls-n-bio { width:62px; height:62px; }
   }
   @media(max-width:620px) {
     #leopardi-site { border-radius:0; }
@@ -183,7 +198,6 @@
     #leopardi-site .ls-heading { margin-bottom:24px; }
     #leopardi-site .ls-heading p { font-size:15px; }
     #leopardi-site .ls-artist-card { padding:19px; margin-bottom:10px; }
-    #leopardi-site .ls-card:hover { transform:none; }
     #leopardi-site .ls-map { height:690px; max-height:none; min-height:0; }
     #leopardi-site .ls-center { top:16%; width:176px; height:176px; }
     #leopardi-site .ls-center b { font-size:23px; }
@@ -197,9 +211,22 @@
     #leopardi-site .ls-n-bio.b5 { left:88%; top:87%; }
     #leopardi-site .ls-grid2 { grid-template-columns:1fr; }
     #leopardi-site .ls-earth { height:330px; }
+    #leopardi-site .ls-answers { grid-template-columns:1fr; }
     #leopardi-site .ls-stop-card { grid-template-columns:1fr; }
     #leopardi-site .ls-stop-image { height:180px; min-height:180px; }
     #leopardi-site .ls-stop-name { font-size:27px; }
+  }
+  @media(max-width:380px) {
+    #leopardi-site .ls-nav { gap:4px; }
+    #leopardi-site .ls-map { height:620px; }
+    #leopardi-site .ls-center { width:150px; height:150px; }
+    #leopardi-site .ls-center b { font-size:20px; }
+    #leopardi-site .ls-n-dialogo { width:98px; height:98px; font-size:11px; }
+    #leopardi-site .ls-n-vita, #leopardi-site .ls-n-giochi, #leopardi-site .ls-n-materie { width:86px; height:86px; font-size:12px; }
+    #leopardi-site .ls-n-bio { width:52px; height:52px; font-size:9px; }
+  }
+  @media(prefers-reduced-motion:reduce) {
+    #leopardi-site *, #leopardi-site *:before, #leopardi-site *:after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
   }
 </style>
 
@@ -504,7 +531,7 @@
         ${timeline.map((e,i)=>`<a class="ls-node ls-n-bio b${i+1}" href="#vita" data-page="vita" data-event="${i}"><b>${e[0].split("–")[0]}</b><small>${e[0].split("–")[1]}</small></a>`).join("")}
       </div><p class="ls-hint">Tocca una pallina per entrare nel capitolo.</p></div>`;
     } else if(page==="vita"){
-      content.innerHTML=`<div class="ls-wrap">${heading("I","La vita di Leopardi","Segui le tappe della sua vita: dietro le date ci sono partenze mancate, incontri, studio e poesia.")}${timeline.map((e,i)=>`<article class="ls-card"><span class="ls-period">${e[0]}</span><h3>${e[1]}</h3><p>${e[2]}</p>${eventOpen===i?`<div class="ls-detail">${e[3].map(d=>`<p>• ${d}</p>`).join("")}<div class="ls-callout"><b>Una domanda per te</b><p>${e[4]}</p>${e[5].map((o,j)=>`<button class="ls-chip" data-event-answer="${j}" data-correct="${e[6]}">${o}</button>`).join("")}<p class="ls-muted" data-event-feedback></p><small>${e[7]}</small></div></div>`:""}<button class="ls-btn" data-open="${i}">${eventOpen===i?"Chiudi la tappa":"Scopri questa tappa"}</button></article>`).join("")}</div>`;
+      content.innerHTML=`<div class="ls-wrap ls-timeline">${heading("I","La vita di Leopardi","Segui le tappe della sua vita: dietro le date ci sono partenze mancate, incontri, studio e poesia.")}${timeline.map((e,i)=>`<article class="ls-card"><span class="ls-period">${e[0]}</span><h3>${e[1]}</h3><p>${e[2]}</p>${eventOpen===i?`<div class="ls-detail">${e[3].map(d=>`<p>• ${d}</p>`).join("")}<div class="ls-callout"><b>Una domanda per te</b><p>${e[4]}</p>${e[5].map((o,j)=>`<button class="ls-chip" data-event-answer="${j}" data-correct="${e[6]}">${o}</button>`).join("")}<p class="ls-muted" data-event-feedback></p><small>${e[7]}</small></div></div>`:""}<button class="ls-btn" data-open="${i}">${eventOpen===i?"Chiudi la tappa":"Scopri questa tappa"}</button></article>`).join("")}</div>`;
     } else if(page==="dialogo"){
       content.innerHTML=`<div class="ls-wrap">${heading("II","Dialogo della Natura e di un Islandese","Un incontro sorprendente, una domanda semplice e una risposta durissima. Leggi il testo, poi passa alla parafrasi.")}<div class="ls-tabs"><button class="ls-chip ${dialogueTab===0?"active":""}" data-dialogue-tab="0">Testo originale</button><button class="ls-chip ${dialogueTab===1?"active":""}" data-dialogue-tab="1">Parafrasi</button><button class="ls-chip" data-speak aria-pressed="${speechReading}">${speechReading?"⏹ Interrompi la lettura":"🔊 Ascolta la parafrasi"}</button></div>${dialogue.map((d,i)=>`<div class="ls-grid2 ls-card"><article class="${dialogueTab===0?"":"ls-hidden"}"><h3>Le parole di Leopardi</h3><p class="ls-quote">${esc(d[0])}</p></article><article class="${dialogueTab===1?"":"ls-hidden"}"><h3>Detto con parole di oggi</h3><p>${esc(d[1])}</p></article><details><summary>Apri il glossario</summary><p><b>Natura:</b> per il Leopardi maturo è «matrigna»: non odia l'uomo, semplicemente non si cura di lui.</p><p><b>Perpetuo circuito:</b> ciclo eterno di nascita e distruzione, in cui ogni cosa vive della distruzione di un'altra.</p><p><b>Linea equinoziale:</b> l'Equatore, nel cuore caldo dell'Africa.</p></details></div>`).join("")}</div>`;
     } else if(page==="giochi"){
@@ -516,7 +543,7 @@
         `<button class="ls-chip ${subject===artistTab?"active":""}" data-subject="${artistTab}">🖼️ Artisti dell'800</button>`;
       const subjectContent=subject===artistTab
         ? `<div class="ls-callout"><b>Sei incontri, sei modi diversi di guardare il mondo</b><p>Fai un giro tra quadri, musica e idee dell'Ottocento. Per ogni artista trovi il contesto, un filo che lo avvicina a Leopardi e una differenza che aiuta a non confondere le loro voci: sono confronti, non necessariamente influenze dirette.</p></div><div class="ls-artist-list">${artistConnections.map(a=>`<article class="ls-card ls-artist-card"><h3>${esc(a.name)}</h3><p><b>${esc(a.work)}</b></p><p class="ls-artist-meta">${esc(a.place)}</p><div class="ls-artist-block"><h4>Prima, guarda l'opera</h4><p>${esc(a.context)}</p></div><div class="ls-artist-block"><h4>Il filo con Leopardi</h4><p>${esc(a.connection)}</p></div><div class="ls-artist-block"><h4>Dove le strade si dividono</h4><p>${esc(a.difference)}</p></div></article>`).join("")}</div>`
-        : subjects[subject][1].map(b=>`<article class="ls-card"><h3>${b[0]}</h3><p>${b[1]}</p></article>`).join("");
+        : `<div class="ls-subject-cards">${subjects[subject][1].map(b=>`<article class="ls-card"><h3>${b[0]}</h3><p>${b[1]}</p></article>`).join("")}</div>`;
       content.innerHTML=`<div class="ls-wrap">${heading("IV","Mappa delle Materie","Segui le curiosità: dall'arte ai vulcani, dalle idee alle emozioni. Scegli una traccia e vedi dove ti porta.")}<div class="ls-tabs">${subjectTabs}</div>${subjectContent}</div>`;
     }
     content.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",ev=>{ev.preventDefault();go(el.dataset.page);if(el.dataset.event){eventOpen=Number(el.dataset.event);render()}}));
