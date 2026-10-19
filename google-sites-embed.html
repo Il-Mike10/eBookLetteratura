@@ -1,0 +1,604 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body {
+    min-height: 100%;
+    margin: 0;
+    background: #f5f0e5;
+  }
+  body { min-width: 320px; }
+  #leopardi-site {
+    --bg: #f5f0e5;
+    --paper: #fcfaf5;
+    --ink: #30251e;
+    --muted: #756a60;
+    --rust: #a54832;
+    --gold: #c49a3d;
+    --line: #d8cbbb;
+    color: var(--ink);
+    background:
+      radial-gradient(ellipse at 8% 18%, rgba(196,154,61,.07), transparent 28rem),
+      radial-gradient(ellipse at 92% 62%, rgba(165,72,50,.045), transparent 32rem),
+      var(--bg);
+    font: 16px/1.7 Inter, "Segoe UI", Arial, sans-serif;
+    border: 0;
+    border-radius: 0;
+    overflow: hidden;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  #leopardi-site * { box-sizing: border-box; }
+  #leopardi-site button, #leopardi-site input { font: inherit; }
+  #leopardi-site button { cursor: pointer; }
+  #leopardi-site .ls-nav {
+    background: rgba(252,250,245,.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 64px;
+    padding: 10px clamp(14px,3vw,30px);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  #leopardi-site .ls-brand { color: var(--ink); text-decoration: none; font: 700 22px Georgia,serif; white-space: nowrap; letter-spacing:.01em; }
+  #leopardi-site .ls-links { display: flex; gap: 5px; overflow-x: auto; }
+  #leopardi-site .ls-links button {
+    border: 0; border-radius: 24px; padding: 7px 11px; white-space: nowrap;
+    color: var(--muted); background: transparent; font-size: 13px;
+  }
+  #leopardi-site .ls-links button:hover, #leopardi-site .ls-links button[aria-current="page"] { color: white; background: var(--rust); }
+  #leopardi-site .ls-progress { height: 3px; background: #e9dfd0; }
+  #leopardi-site .ls-progress i { display:block; height:100%; width:0; background: linear-gradient(90deg,var(--rust),var(--gold)); }
+  #leopardi-site .ls-page { flex: 1; min-height: 560px; padding: clamp(24px,4vw,48px) 18px 58px; }
+  #leopardi-site .ls-wrap { max-width: 1120px; margin: auto; }
+  #leopardi-site .ls-home { padding-top: 16px; }
+  #leopardi-site .ls-map {
+    height: 660px; max-height: 78vh; min-height: 500px; position: relative; overflow: hidden;
+    border: 0; border-radius: 28px; box-shadow: none;
+    background: radial-gradient(ellipse at 48% 45%,rgba(208,176,119,.4),transparent 48%),
+      radial-gradient(ellipse at 15% 85%,rgba(88,112,82,.55),transparent 48%),
+      linear-gradient(145deg,#29382f 0%,#605a44 50%,#29382f 100%);
+  }
+  #leopardi-site .ls-map:before, #leopardi-site .ls-map:after {
+    content:""; position:absolute; inset:-10%; opacity:.23; pointer-events:none;
+    background: repeating-radial-gradient(ellipse at 52% 48%,transparent 0 34px,rgba(255,255,255,.24) 35px 36px,transparent 37px 60px);
+  }
+  #leopardi-site .ls-map:after { opacity:.15; transform:rotate(22deg) scale(1.2); }
+  #leopardi-site .ls-wires { position:absolute; inset:0; width:100%; height:100%; }
+  #leopardi-site .ls-wires line { stroke:#f5d98a; stroke-width:.35; stroke-dasharray:1 1.4; opacity:.8; }
+  #leopardi-site .ls-node {
+    position:absolute; z-index:1; transform:translate(-50%,-50%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    padding:10px; color:white; text-decoration:none; border-radius:50%;
+    border:1px solid rgba(255,255,255,.65);
+    background:rgba(20,24,22,.56); backdrop-filter:blur(6px);
+    text-shadow:0 1px 4px #000; box-shadow:0 8px 24px #0005;
+    animation:ls-float 4s ease-in-out infinite;
+  }
+  #leopardi-site .ls-node:hover { outline:2px solid var(--gold); transform:translate(-50%,-50%) scale(1.06); }
+  #leopardi-site .ls-center { left:50%; top:47%; width:220px; height:220px; border-width:2px; }
+  #leopardi-site .ls-center b { font:700 29px/1.04 Georgia,serif; letter-spacing:.02em; }
+  #leopardi-site .ls-center small { margin-top:9px; font-size:12px; }
+  #leopardi-site .ls-n-vita { left:20%; top:49%; width:120px; height:120px; }
+  #leopardi-site .ls-n-dialogo { left:81%; top:29%; width:142px; height:142px; }
+  #leopardi-site .ls-n-giochi { left:80%; top:74%; width:120px; height:120px; }
+  #leopardi-site .ls-n-materie { left:50%; top:12%; width:118px; height:118px; }
+  #leopardi-site .ls-n-bio { left:6%; top:10%; width:70px; height:70px; font-size:12px; }
+  #leopardi-site .ls-n-bio.b2 { top:28%; } #leopardi-site .ls-n-bio.b3 { top:47%; }
+  #leopardi-site .ls-n-bio.b4 { top:66%; } #leopardi-site .ls-n-bio.b5 { top:85%; }
+  #leopardi-site .ls-hint { text-align:center; color:var(--muted); font-size:12px; margin:10px 0 0; }
+  @keyframes ls-float { 0%,100% { margin-top:0; } 50% { margin-top:-6px; } }
+  #leopardi-site .ls-heading { text-align:center; margin: 8px auto 34px; max-width:780px; }
+  #leopardi-site .ls-heading .ls-number {
+    display:inline-flex; align-items:center; gap:9px;
+    color:var(--rust); text-transform:uppercase; letter-spacing:.16em; font-size:11px; font-weight:700;
+    padding:6px 12px; border:1px solid #d8cbbb; border-radius:30px; background:#fcfaf5b8;
+  }
+  #leopardi-site .ls-heading .ls-number:before, #leopardi-site .ls-heading .ls-number:after { content:"✦"; color:var(--gold); font-size:10px; }
+  #leopardi-site h1, #leopardi-site h2, #leopardi-site h3 { font-family:Georgia,"Times New Roman",serif; }
+  #leopardi-site .ls-heading h1 { font-size:clamp(34px,5vw,52px); line-height:1.04; margin:13px 0 10px; letter-spacing:-.025em; }
+  #leopardi-site .ls-heading p { color:var(--muted); margin:8px auto; max-width:650px; font-size:16px; }
+  #leopardi-site .ls-card {
+    background:linear-gradient(145deg,rgba(255,255,255,.56),transparent 70%),var(--paper);
+    border:1px solid var(--line); border-radius:20px 20px 20px 8px; padding:clamp(18px,2.5vw,25px);
+    margin:16px 0; box-shadow:0 5px 18px #513e2010; transition:transform .2s ease,box-shadow .2s ease;
+  }
+  #leopardi-site .ls-card:hover { transform:translateY(-2px); box-shadow:0 10px 24px #513e2018; }
+  #leopardi-site .ls-card h3 { color:var(--rust); font-size:clamp(21px,2.4vw,26px); line-height:1.16; margin:0 0 10px; }
+  #leopardi-site .ls-artist-meta { color:var(--muted); font-size:12px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; margin:-3px 0 16px; }
+  #leopardi-site .ls-artist-list { columns:2; column-gap:18px; counter-reset:artist; margin-top:18px; }
+  #leopardi-site .ls-artist-card { display:inline-block; width:100%; break-inside:avoid; position:relative; margin:0 0 18px; padding:24px; overflow:hidden; counter-increment:artist; }
+  #leopardi-site .ls-artist-card:before {
+    content:"0" counter(artist); position:absolute; right:16px; top:10px; color:#a5483214;
+    font:700 64px/.95 Georgia,serif; pointer-events:none;
+  }
+  #leopardi-site .ls-artist-card h3, #leopardi-site .ls-artist-card>p { position:relative; }
+  #leopardi-site .ls-artist-block { margin-top:16px; padding-top:12px; border-top:1px solid #d8cbbb99; }
+  #leopardi-site .ls-artist-block h4 { color:var(--rust); font:700 12px/1.4 Inter,"Segoe UI",Arial,sans-serif; text-transform:uppercase; letter-spacing:.1em; margin:0 0 6px; }
+  #leopardi-site .ls-artist-block p { margin:0; }
+  #leopardi-site .ls-period { color:var(--rust); font-size:13px; font-weight:700; }
+  #leopardi-site .ls-muted { color:var(--muted); }
+  #leopardi-site .ls-detail { padding:12px 0 0; border-top:1px solid var(--line); margin-top:12px; }
+  #leopardi-site .ls-btn, #leopardi-site .ls-chip {
+    background:var(--rust); color:white; border:1px solid var(--rust); border-radius:22px;
+    padding:9px 15px; font-weight:600;
+  }
+  #leopardi-site .ls-btn:hover { filter:brightness(.92); }
+  #leopardi-site .ls-chip { background:var(--paper); color:var(--ink); border-color:var(--line); margin:3px; }
+  #leopardi-site .ls-chip.active, #leopardi-site .ls-chip:hover { background:var(--rust); color:white; border-color:var(--rust); }
+  #leopardi-site .ls-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  #leopardi-site .ls-tabs { display:flex; flex-wrap:wrap; gap:6px; margin:14px 0; }
+  #leopardi-site .ls-quote { font:18px/1.7 Georgia,serif; white-space:pre-line; }
+  #leopardi-site .ls-callout { border-left:4px solid var(--rust); background:linear-gradient(115deg,#eee5d5,#f5ead8); padding:17px 20px; border-radius:5px 16px 16px 5px; }
+  #leopardi-site :focus-visible { outline:3px solid var(--gold); outline-offset:3px; }
+  #leopardi-site .ls-options { display:grid; gap:9px; }
+  #leopardi-site .ls-option { text-align:left; padding:11px 14px; background:var(--paper); border:1px solid var(--line); border-radius:12px; color:var(--ink); }
+  #leopardi-site .ls-option:hover:not(:disabled) { border-color:var(--rust); background:#f4e9dc; }
+  #leopardi-site .ls-option.selected { background:#a54832; color:#fff; border-color:#a54832; }
+  #leopardi-site .ls-option.correct { background:#e5f3e6; border-color:#398248; }
+  #leopardi-site .ls-option.wrong { background:#fce9e5; border-color:#b84332; }
+  #leopardi-site .ls-answers { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  #leopardi-site .ls-answers button { min-height:54px; }
+  #leopardi-site .ls-input { width:min(100%,280px); border:1px solid var(--line); border-radius:22px; padding:9px 13px; background:var(--paper); color:var(--ink); }
+  #leopardi-site .ls-earth { position:relative; height:390px; color:white; overflow:hidden;
+    border-radius:18px; background:radial-gradient(ellipse at 50% 45%,#14283c,#070d18 72%); }
+  #leopardi-site .ls-earth canvas { position:absolute; inset:0; display:block; width:100%; height:100%; touch-action:none; }
+  #leopardi-site .ls-earth canvas.ls-earth-base { pointer-events:none; }
+  #leopardi-site .ls-earth canvas.ls-earth-controls { cursor:grab; }
+  #leopardi-site .ls-earth canvas.ls-earth-controls:active { cursor:grabbing; }
+  #leopardi-site .ls-earth-hint { position:absolute; left:12px; right:12px; bottom:8px; text-align:center; color:#ffffffbd; font-size:11px; pointer-events:none; }
+  #leopardi-site .ls-globe-controls { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  #leopardi-site .ls-globe-controls p { margin:0; }
+  #leopardi-site .ls-stop-card { display:grid; grid-template-columns:minmax(150px, .8fr) 1.2fr; overflow:hidden; padding:0; }
+  #leopardi-site .ls-stop-image { min-height:230px; width:100%; height:100%; object-fit:cover; background:linear-gradient(145deg,#d8e6ed,#647e7f 48%,#273b38); }
+  #leopardi-site .ls-stop-copy { padding:20px; position:relative; }
+  #leopardi-site .ls-stop-number { color:var(--rust); font-size:11px; letter-spacing:.14em; font-weight:700; }
+  #leopardi-site .ls-stop-name { font:700 30px/1.1 Georgia,serif; margin:5px 0; }
+  #leopardi-site .ls-stop-place { color:var(--muted); font-size:12px; margin:0; }
+  #leopardi-site .ls-stop-summary { font-size:14px; line-height:1.65; margin:14px 0 0; }
+  #leopardi-site .ls-photo-credit { color:var(--muted); font-size:10px; margin:12px 0 0; }
+  #leopardi-site .ls-stop-close { position:absolute; right:12px; top:10px; border:0; background:transparent; color:var(--muted); font-size:22px; }
+  #leopardi-site .ls-footer { padding:18px; text-align:center; border-top:0; color:var(--muted); font-size:13px; }
+  #leopardi-site .ls-hidden { display:none !important; }
+  @media(max-width:900px) {
+    #leopardi-site .ls-page { padding:22px clamp(14px,3vw,24px) 40px; }
+    #leopardi-site .ls-wrap { max-width:100%; }
+  }
+  @media(max-width:760px) {
+    #leopardi-site .ls-artist-list { columns:1; }
+    #leopardi-site .ls-grid2 { grid-template-columns:1fr; }
+  }
+  @media(max-width:620px) {
+    #leopardi-site { border-radius:0; }
+    #leopardi-site .ls-nav { align-items:flex-start; flex-direction:column; gap:2px; padding:8px 10px; }
+    #leopardi-site .ls-links { width:100%; }
+    #leopardi-site .ls-links button { padding:6px 9px; font-size:12px; }
+    #leopardi-site .ls-page { padding:16px 11px 38px; }
+    #leopardi-site .ls-heading { margin-bottom:24px; }
+    #leopardi-site .ls-heading p { font-size:15px; }
+    #leopardi-site .ls-artist-card { padding:19px; margin-bottom:10px; }
+    #leopardi-site .ls-card:hover { transform:none; }
+    #leopardi-site .ls-map { height:690px; max-height:none; min-height:0; }
+    #leopardi-site .ls-center { top:16%; width:176px; height:176px; }
+    #leopardi-site .ls-center b { font-size:23px; }
+    #leopardi-site .ls-n-dialogo { left:78%; top:36%; width:112px; height:112px; font-size:13px; }
+    #leopardi-site .ls-n-giochi { left:22%; top:36%; }
+    #leopardi-site .ls-n-materie { left:22%; top:57%; }
+    #leopardi-site .ls-n-vita { left:50%; top:72%; }
+    #leopardi-site .ls-n-bio { top:87%; width:60px; height:60px; font-size:10px; }
+    #leopardi-site .ls-n-bio.b1 { left:12%; } #leopardi-site .ls-n-bio.b2 { left:31%; top:94%; }
+    #leopardi-site .ls-n-bio.b3 { left:50%; top:96%; } #leopardi-site .ls-n-bio.b4 { left:69%; top:94%; }
+    #leopardi-site .ls-n-bio.b5 { left:88%; top:87%; }
+    #leopardi-site .ls-grid2 { grid-template-columns:1fr; }
+    #leopardi-site .ls-earth { height:330px; }
+    #leopardi-site .ls-stop-card { grid-template-columns:1fr; }
+    #leopardi-site .ls-stop-image { height:180px; min-height:180px; }
+    #leopardi-site .ls-stop-name { font-size:27px; }
+  }
+</style>
+
+<div id="leopardi-site">
+  <header class="ls-nav">
+    <a class="ls-brand" href="#home" data-page="home">◈ <span>Mappa</span></a>
+    <nav class="ls-links" aria-label="Capitoli">
+      <button data-page="vita">Vita</button><button data-page="dialogo">Dialogo</button>
+      <button data-page="giochi">Giochi</button><button data-page="materie">Materie</button>
+    </nav>
+  </header>
+  <div class="ls-progress"><i></i></div>
+  <main class="ls-page" id="ls-content"></main>
+  <footer class="ls-footer">Giacomo Leopardi · Recanati 1798 – Napoli 1837</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  const root = document.getElementById("leopardi-site");
+  if (!root) return;
+  const content = root.querySelector("#ls-content");
+  const nav = root.querySelector(".ls-links");
+  const timeline = [
+    ["1798–1809","Infanzia a Recanati","Giacomo Leopardi nasce a Recanati il 29 giugno 1798, in una famiglia aristocratica.",["È il primogenito di Monaldo Leopardi e Adelaide Antici. Cresce nella casa di famiglia, in un ambiente colto ma severo.","La biblioteca paterna diventa il centro della sua formazione: fin da bambino si dedica alla lettura e allo studio."],"In quale città nacque Giacomo Leopardi?",["Pisa","Recanati","Napoli"],1,"Leopardi nacque a Recanati il 29 giugno 1798."],
+    ["1809–1816","Gli anni dello studio","Nella biblioteca di casa costruisce una cultura vastissima e si avvicina alla poesia.",["Studia da autodidatta lingue classiche, storia, filosofia e letteratura, traducendo anche autori antichi.","Questi anni di studio intenso gli danno una preparazione eccezionale, ma mettono a dura prova la sua salute.","Con il tempo passa dall'erudizione alla scrittura poetica e alla riflessione personale."],"Dove si forma soprattutto il giovane Leopardi?",["Nella biblioteca di famiglia","All'università di Bologna","A corte a Firenze"],0,"La biblioteca di famiglia a Recanati fu il centro della sua formazione."],
+    ["1817–1822","Dallo studio alla poesia","Leopardi avvia lo Zibaldone e compone alcuni dei suoi primi grandi idilli.",["Nel 1817 inizia lo Zibaldone, un diario di pensieri e osservazioni che continuerà per molti anni.","Nel 1819 compone L'infinito. Nello stesso periodo tenta di lasciare Recanati, ma il progetto fallisce.","Nel 1822 visita Roma: il viaggio amplia la sua esperienza, ma non corrisponde alle aspettative."],"Quale opera raccoglie pensieri e appunti di Leopardi?",["I Promessi sposi","Lo Zibaldone","Il Decameron"],1,"Lo Zibaldone è il suo ampio diario intellettuale."],
+    ["1823–1827","Le Operette morali","Dopo il ritorno a Recanati, Leopardi approfondisce la riflessione sulla condizione umana.",["Nel 1824 scrive gran parte delle Operette morali, dialoghi e prose filosofiche sulla felicità e sul dolore.","Nel 1825 lascia Recanati per lavorare a Milano, Bologna e Firenze, ma la precarietà economica lo accompagna.","Nel 1827 esce a Milano la prima edizione delle Operette morali."],"Quale forma caratterizza molte Operette morali?",["Dialoghi e prose filosofiche","Poemi epici in ottave","Commedie teatrali"],0,"Le Operette morali sono prose filosofiche, spesso in forma di dialogo."],
+    ["1828–1837","Gli ultimi anni e la Ginestra","Tra Pisa, Firenze e Napoli scrive nuovi canti e riflette sulla solidarietà umana.",["Nel 1828 compone A Silvia. Nel 1829, a Recanati, scrive altri canti importanti.","Dal 1830 vive soprattutto tra Firenze e Napoli; Antonio Ranieri gli resterà vicino.","Nel 1836 compone La ginestra, che invita gli uomini a unirsi di fronte alla fragilità comune.","Muore a Napoli il 14 giugno 1837."],"Dove muore Giacomo Leopardi?",["A Recanati","A Roma","A Napoli"],2,"Leopardi muore a Napoli il 14 giugno 1837."]
+  ];
+  const dialogue = [
+    ["Un Islandese, che era corso per la maggior parte del mondo [...] andando una volta per l’interiore dell’Affrica, e passando sotto la linea equinoziale [...] vide da lontano un busto grandissimo [...] una forma smisurata di donna seduta in terra, appoggiata a una montagna; viva, di volto mezzo tra bello e terribile.","Un islandese attraversa l'Africa centrale, vicino all'Equatore, in un luogo dove nessun uomo era mai arrivato. Da lontano scorge una figura gigantesca; avvicinandosi scopre una donna viva, seduta accanto a una montagna, con un volto insieme bello e spaventoso."],
+    ["NATURA — Chi sei? che cerchi in questi luoghi dove la tua specie era incognita?\nISLANDESE — Sono un povero Islandese, che vo fuggendo la Natura; e fuggitala quasi tutto il tempo della mia vita per cento parti della terra, la fuggo adesso per questa.\nNATURA — Io sono quella che tu fuggi.","NATURA — Chi sei? Che cosa cerchi qui, dove gli uomini non sono mai arrivati?\nISLANDESE — Sono un povero islandese che scappa dalla Natura. L'ho evitata per quasi tutta la vita in cento angoli del mondo, e ora la evito anche qui.\nNATURA — Sono io quella da cui fuggi."],
+    ["ISLANDESE — Fui persuaso e chiaro della vanità della vita, e della stoltezza degli uomini; i quali combattendo continuamente gli uni cogli altri per l’acquisto di piaceri che non dilettano, e di beni che non giovano, tanto più si allontanano dalla felicità, quanto più la cercano.","ISLANDESE — Fin da giovane ho capito quanto la vita sia vuota e quanto siano sciocchi gli uomini: si fanno la guerra per piaceri che non appagano e beni che non servono; più inseguono la felicità, più se ne allontanano."],
+    ["ISLANDESE — Quasi tutto il mondo ho cercato [...] di procurare la sola tranquillità della vita. Ma io sono stato arso dal caldo fra i tropici, rappreso dal freddo verso i poli, afflitto nei climi temperati dall’incostanza dell’aria, infestato dagli elementi in ogni dove.","ISLANDESE — Ho viaggiato quasi ovunque, cercando solo la quiete e senza disturbare nessuno. Ma ho sofferto il caldo bruciante dei tropici, il gelo dei poli e il tempo instabile delle zone temperate: ovunque gli elementi mi hanno tormentato."],
+    ["NATURA — Immaginavi tu forse che il mondo fosse fatto per causa degli uomini? [...] Quando io vi offendo in qualunque modo [...] io non me ne avveggo, se non rarissime volte: come ordinariamente non mi avvedo dei piaceri o dei benefizi che vi faccio.","NATURA — Pensavi che il mondo fosse stato creato per gli uomini? Non pensavo né alla vostra felicità né alla vostra infelicità. Se vi faccio del male, quasi sempre non me ne accorgo, così come non mi accorgo dei benefici che vi do."],
+    ["NATURA — La vita di quest’universo è un perpetuo circuito di produzione e distruzione, collegate ambedue tra sé [...] ed alla conservazione del mondo.","NATURA — La vita dell'universo è un ciclo senza fine di produzione e distruzione: le due cose sono legate e si servono a vicenda. La sofferenza fa parte di questo meccanismo impersonale."],
+    ["[...] Si dice che due leoni [...] lo divorarono; ma altri racconta che un fierissimo vento di sabbia lo stese per terra, e sopra lui fece un superbo mausoleo di sabbia: dove, disseccato, e divenuto una bellissima mummia, fu poi ritrovato da viaggiatori.","Il dialogo si chiude senza risposta. Secondo una versione due leoni divorano l'Islandese; secondo un'altra una tempesta di sabbia lo seppellisce e lo trasforma in mummia. La Natura resta indifferente."]
+  ];
+  const questions = [
+    ["Biografia","In quale anno nacque Giacomo Leopardi?",["1798","1804","1815"],0,"Nacque il 29 giugno 1798 a Recanati."],
+    ["Biografia","Quale opera raccoglie pensieri e riflessioni scritti per molti anni?",["Le Operette morali","Lo Zibaldone","I Promessi sposi"],1,"Lo Zibaldone è il suo ampio diario intellettuale."],
+    ["Pessimismo","Nella prima fase del pensiero leopardiano, cosa allontana dalla felicità?",["La civiltà e la ragione","La natura benevola","La solidarietà"],0,"Nel pessimismo storico civiltà e ragione indeboliscono le illusioni."],
+    ["Pessimismo","Che cosa indica il pessimismo cosmico?",["Il dolore dipende solo dalla società","La natura è indifferente e il dolore riguarda gli esseri viventi","La felicità è garantita dalla conoscenza"],1,"Il dolore è legato alla condizione universale degli esseri viventi."],
+    ["Dialogo","Chi incontra l'Islandese?",["La Natura, una gigantesca figura femminile","Un viaggiatore greco","Un pastore"],0,"La Natura è personificata come una donna gigantesca."],
+    ["Dialogo","Perché l'Islandese ha viaggiato tanto?",["Per cercare un luogo senza sofferenze","Per conquistare territori","Per trovare una biblioteca"],0,"Cercava invano un luogo al riparo dai disagi della natura."],
+    ["Dialogo","Qual è la posizione della Natura nel dialogo?",["Agisce per rendere felici gli uomini","È indifferente alle sofferenze umane","Punisce solo chi vive in città"],1,"La Natura non ha creato il mondo per la felicità umana."],
+    ["Pessimismo","Che cosa significa \"social catena\" nella Ginestra?",["La solidarietà tra gli uomini","Una legge immutabile","La dipendenza dalla ricchezza"],0,"Gli uomini possono allearsi, consapevoli della fragilità comune."]
+  ];
+  const pairs = [["Natura matrigna","Pessimismo cosmico · Operette morali"],["Studio matto e disperatissimo","1809–1816 · Biblioteca di Recanati"],["Produzione e distruzione","Risposta della Natura all'Islandese"],["Social catena","La Ginestra · 1836"],["Sempre caro mi fu quest'ermo colle","L'infinito · 1819"],["Natura benigna, civiltà corruttrice","Pessimismo storico"]];
+  const trueFalse = [
+    ["L'Islandese incontra la Natura nei ghiacci dell'Antartide.",false,"La incontra nell'interno dell'Africa, sotto la linea equinoziale."],
+    ["La Natura appare come una gigantesca donna seduta.",true,"La descrizione parla di una figura smisurata, viva e appoggiata a una montagna."],
+    ["La Natura dice che l'universo funziona per produzione e distruzione.",true,"È il perpetuo circuito che conserva il mondo."],
+    ["L'Islandese fugge dalla Natura per cercare ricchezza.",false,"Cerca una vita tranquilla, senza patimenti."],
+    ["La Natura afferma di aver creato il mondo per la felicità degli uomini.",false,"Non ha pensato né alla loro felicità né alla loro infelicità."],
+    ["La Natura si accorge sempre delle sofferenze che provoca.",false,"Dice di non accorgersene, se non rarissime volte."],
+    ["Il Dialogo fa parte delle Operette morali.",true,"È uno dei dialoghi della raccolta, composto nel 1824."],
+    ["Nel finale l'Islandese muore divorato dai leoni o sepolto dalla sabbia.",true,"Leopardi riporta entrambe le versioni dell'epilogo."]
+  ];
+  const subjects = [
+    ["🎨 Arte & Cinema",[
+      ["Friedrich · Il viandante sul mare di nebbia (1818)","Un uomo di spalle guarda un mare di nebbia: è il sublime romantico, la piccolezza dell'individuo davanti a un paesaggio immenso. Il dipinto dialoga con L'infinito, ma Leopardi non cerca consolazioni trascendenti."],
+      ["Friedrich · Il mare di ghiaccio (1823–24)","Lastre di ghiaccio travolgono una nave: la natura appare grandiosa e indifferente alla sorte umana, in parallelo con il Dialogo della Natura e di un Islandese."],
+      ["Cinema · Interstellar e Dune","Mondi ostili e indifferenti ricordano la Natura del Dialogo: l'essere umano è piccolo e fragile."]
+    ]],
+    ["🌋 Scienze della Terra e Geografia",[
+      ["Islanda: un'isola che si apre","L'Islanda sorge sulla dorsale medio-atlantica, dove le placche nordamericana ed euroasiatica si allontanano e il magma risale."],
+      ["L'Hekla e l'Eyjafjallajökull","Il monte «Ecla» citato dall'Islandese è l'Hekla. L'Eyjafjallajökull, invece, è il vulcano sotto un ghiacciaio noto per l'eruzione del 2010."],
+      ["Sahara: giorni infuocati, notti gelide","Nel deserto il suolo può superare i 40 °C di giorno e disperdere rapidamente calore di notte: l'Islandese passa da un estremo all'altro."]
+    ]],
+    ["🧠 Filosofia & Psicologia",[
+      ["Leopardi e Schopenhauer","Schopenhauer individua una Volontà cieca alla radice del dolore; Leopardi descrive una Natura che produce e distrugge senza intenzione. La risposta leopardiana include lucidità, poesia e social catena."],
+      ["Eco-ansia: l'Islandese di oggi","L'Islandese fugge da luoghi ostili e vive in allerta: un'immagine che può ricordare la preoccupazione contemporanea per i cambiamenti ambientali."],
+      ["Una differenza importante","La Natura leopardiana è indifferente, non «cattiva». Oggi molte alterazioni del clima dipendono invece dalle attività umane."]
+    ]]
+  ];
+  const artistConnections = [
+    {
+      name:"Caspar David Friedrich",
+      work:"Il viandante sul mare di nebbia (1818)",
+      place:"Germania · Romanticismo",
+      context:"Un viandante, visto di spalle, si ferma su una cima rocciosa davanti a un paesaggio montuoso avvolto dalla nebbia. La figura umana è insieme protagonista dello sguardo e piccola presenza dentro uno spazio vastissimo: il paesaggio suggerisce il sublime romantico, un'esperienza di attrazione e smarrimento davanti a ciò che supera la misura umana.",
+      connection:"Il confronto con L'infinito nasce dall'esperienza di un limite che apre l'immaginazione verso ciò che non si può abbracciare con lo sguardo. In Leopardi la siepe interrompe la vista e proprio questo ostacolo fa nascere l'immaginazione; nel quadro di Friedrich la nebbia nasconde il paesaggio e invita a interrogarsi sull'oltre.",
+      difference:"Friedrich affida spesso al paesaggio una dimensione spirituale o contemplativa. Leopardi, invece, non trasforma l'infinito in una certezza religiosa: nel finale della poesia l'immaginazione offre un piacere poetico, non una rivelazione sul divino. Il parallelo è interpretativo, non prova un'influenza diretta."
+    },
+    {
+      name:"Francesco Hayez",
+      work:"Il bacio (1859)",
+      place:"Italia · Romanticismo e Risorgimento",
+      context:"La scena mostra due giovani che si baciano con intensità; la posa e l'ambientazione medievale appartengono al linguaggio romantico, mentre i colori sono stati letti anche come allusione politica al Risorgimento e all'alleanza franco-piemontese. L'opera unisce sentimento privato e attesa collettiva.",
+      connection:"Il confronto con Leopardi può partire dal valore delle illusioni e dei sentimenti. Nella sua poesia l'amore e le speranze possono sostenere la vita, ma sono fragili e spesso deluse; Hayez rende invece visibile l'energia di una passione che, nel contesto risorgimentale, si carica anche di speranza civile.",
+      difference:"Il dipinto non illustra un testo leopardiano e non va presentato come risposta diretta al poeta. Hayez guarda soprattutto alla storia, al sentimento e alla causa nazionale; Leopardi indaga la condizione umana e il rapporto con la Natura, senza proporre il progresso politico come soluzione al dolore."
+    },
+    {
+      name:"Giovanni Fattori",
+      work:"La rotonda di Palmieri (1866)",
+      place:"Italia · Macchiaioli",
+      context:"In questa piccola tavola alcune donne sono sedute sotto una tenda sulla rotonda di un bagno a Livorno. La composizione è costruita con campiture di luce e ombra — le «macchie» — e riduce i dettagli per concentrarsi sui rapporti tra colori, forme e luce.",
+      connection:"La scena quotidiana e il paesaggio concreto permettono di accostare Fattori alla capacità leopardiana di partire da un'esperienza limitata e sensibile. Come il colle e la siepe dell'Infinito, un luogo circoscritto può diventare il punto d'avvio per una riflessione più ampia su percezione, memoria e immaginazione.",
+      difference:"Fattori osserva la realtà visibile con una ricerca pittorica legata alla luce e alla vita del suo tempo. Leopardi usa invece la parola, il ritmo e il pensiero filosofico; la sua meditazione sul paesaggio non coincide con la poetica dei Macchiaioli. Il legame è un confronto tra modi diversi di guardare."
+    },
+    {
+      name:"Giuseppe Verdi",
+      work:"La traviata (1853)",
+      place:"Italia · Opera lirica",
+      context:"L'opera, tratta da La Dame aux camélias di Alexandre Dumas figlio, racconta l'amore tra Violetta Valéry e Alfredo Germont. La malattia, il giudizio sociale e la rinuncia trasformano la vicenda privata in un dramma sul costo umano delle convenzioni e delle disuguaglianze.",
+      connection:"Il dialogo con Leopardi passa dal tema del dolore e dalla distanza tra desiderio e realtà. Come nei testi leopardiani, la felicità è intensamente desiderata ma esposta alla perdita; la musica di Verdi rende questo conflitto attraverso melodie, voci e forme teatrali, mentre Leopardi lo sviluppa con immagini e ragionamento poetico.",
+      difference:"Violetta soffre anche per cause sociali e per una vicenda individuale; il pessimismo leopardiano maturo riguarda invece una condizione più universale, legata alla Natura e alla fragilità di tutti gli esseri viventi. Non sono opere equivalenti: l'accostamento mette a confronto linguaggi e prospettive."
+    },
+    {
+      name:"J. M. W. Turner",
+      work:"Pioggia, vapore e velocità (1844)",
+      place:"Inghilterra · Romanticismo",
+      context:"Una locomotiva attraversa un ponte mentre pioggia, vapore e luce dissolvono i contorni del paesaggio. Turner trasforma la velocità e la tecnologia moderna in una scena quasi sublime, dove l'energia della macchina si confonde con quella degli elementi naturali.",
+      connection:"L'opera apre un confronto con la riflessione leopardiana sui limiti dell'individuo. La modernità può aumentare il potere umano sulla natura, ma non elimina la vulnerabilità né garantisce la felicità: nel Dialogo della Natura e di un Islandese la Natura resta indifferente ai progetti e alle aspettative dell'uomo.",
+      difference:"Turner dipinge la trasformazione visiva del paesaggio industriale e il rapporto tra uomo, macchina e ambiente. Leopardi non tematizza la locomotiva né la rivoluzione industriale in questo senso; il collegamento riguarda la domanda più ampia su quanto il progresso possa davvero sottrarci ai limiti naturali."
+    },
+    {
+      name:"Eugène Delacroix",
+      work:"La Libertà che guida il popolo (1830)",
+      place:"Francia · Romanticismo e rivoluzione",
+      context:"Il dipinto rievoca le Tre gloriose giornate di Parigi del luglio 1830. Una figura allegorica della Libertà avanza alla testa di persone di classi diverse, tra barricate e fumo: la composizione celebra l'azione politica collettiva e insieme mostra il suo costo in vite umane.",
+      connection:"Il confronto più significativo è con La ginestra. Entrambe le opere mettono al centro una collettività, ma con accenti differenti: Delacroix raffigura un popolo in lotta per un cambiamento politico; Leopardi invita gli uomini a riconoscersi alleati contro la comune fragilità, senza illudersi che la solidarietà possa sconfiggere la Natura.",
+      difference:"La Libertà di Delacroix è un'allegoria della rivoluzione e della speranza politica. La «social catena» leopardiana non è un programma rivoluzionario: è un patto di solidarietà fondato sulla consapevolezza dei limiti umani. Il raffronto evidenzia una tensione, non una coincidenza."
+    }
+  ];
+  let page="home", eventOpen=-1, tab="quiz", qi=0, qscore=0, qselected=-1, scoreSaved=false, scoreError="", tfIndex=0, tfScore=0, tfAnswer=null, matchSelected=-1, matched=[], errors=0, subject=0, dialogueTab=0, selectedStop=-1, speechReading=false;
+  const scoreKey="leopardi-webbook-quiz-results";
+  const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  function heading(n,title,sub){return `<div class="ls-heading"><span class="ls-number">Capitolo ${n}</span><h1>${title}</h1><p>${sub}</p></div>`}
+  function go(p){page=p; render(); root.scrollIntoView({behavior:"smooth",block:"start"});}
+  let globeObserver=null,globeCleanup=null;
+  const EARTH_TEXTURE="https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg";
+  function drawGlobe(canvas,stops,active,onSelect){
+    if(globeCleanup){globeCleanup();globeCleanup=null}
+    canvas.classList.add("ls-earth-base");
+    const gl=canvas.getContext("webgl",{alpha:true,antialias:true});
+    const parent=canvas.parentElement;
+    const overlay=document.createElement("canvas");
+    overlay.className="ls-earth-controls";
+    overlay.setAttribute("aria-hidden","true");
+    parent.appendChild(overlay);
+    const ctx=overlay.getContext("2d"),pointers=new Map();
+    let width=0,height=0,lon0=12,lat0=0,zoom=1,drag=null,down=null,pinch=0,radius=0,raf=0,disposed=false;
+    let textureReady=false,textureFailed=false;
+    let shaderProgram=null,vertexBuffer=null,indexBuffer=null,earthTexture=null;
+    let positionLoc,uvLoc,rotationLoc,aspectLoc,zoomLoc,textureLoc,readyLoc;
+    function shader(type,source){
+      const result=gl.createShader(type);
+      gl.shaderSource(result,source);gl.compileShader(result);
+      if(!gl.getShaderParameter(result,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(result));
+      return result;
+    }
+    if(gl){
+      const vertex=shader(gl.VERTEX_SHADER,`
+        attribute vec3 aPosition;
+        attribute vec2 aUv;
+        uniform vec2 uRotation;
+        uniform float uAspect;
+        uniform float uZoom;
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        void main(){
+          float cy=cos(uRotation.x),sy=sin(uRotation.x);
+          float cx=cos(uRotation.y),sx=sin(uRotation.y);
+          vec3 p=vec3(cy*aPosition.x+sy*aPosition.z,aPosition.y,-sy*aPosition.x+cy*aPosition.z);
+          p=vec3(p.x,cx*p.y-sx*p.z,sx*p.y+cx*p.z);
+          float cameraZ=3.15;
+          float depth=cameraZ-p.z;
+          float focal=1.0/tan(0.3926990817);
+          gl_Position=vec4(p.x*focal/uAspect,p.y*focal,(2.0-depth)*0.5,depth);
+          gl_Position.xy*=uZoom;
+          vUv=aUv;
+          vNormal=p;
+          vPosition=p;
+        }`);
+      const fragment=shader(gl.FRAGMENT_SHADER,`
+        precision mediump float;
+        uniform sampler2D uEarth;
+        uniform float uReady;
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        void main(){
+          vec3 light=normalize(vec3(-0.45,0.38,1.0));
+          float diffuse=max(dot(normalize(vNormal),light),0.0);
+          float limb=smoothstep(-0.15,0.32,vPosition.z);
+          vec4 day=texture2D(uEarth,vUv);
+          vec3 fallback=vec3(0.045,0.20,0.31)+0.13*diffuse;
+          vec3 surface=mix(fallback,day.rgb,uReady);
+          surface*=0.24+0.88*diffuse;
+          vec3 atmosphere=vec3(0.18,0.56,0.82)*(1.0-limb)*0.65;
+          gl_FragColor=vec4(surface+atmosphere,1.0);
+        }`);
+      shaderProgram=gl.createProgram();gl.attachShader(shaderProgram,vertex);gl.attachShader(shaderProgram,fragment);gl.linkProgram(shaderProgram);
+      if(!gl.getProgramParameter(shaderProgram,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(shaderProgram));
+      gl.useProgram(shaderProgram);
+      positionLoc=gl.getAttribLocation(shaderProgram,"aPosition");uvLoc=gl.getAttribLocation(shaderProgram,"aUv");
+      rotationLoc=gl.getUniformLocation(shaderProgram,"uRotation");aspectLoc=gl.getUniformLocation(shaderProgram,"uAspect");zoomLoc=gl.getUniformLocation(shaderProgram,"uZoom");textureLoc=gl.getUniformLocation(shaderProgram,"uEarth");readyLoc=gl.getUniformLocation(shaderProgram,"uReady");
+      const vertices=[],indices=[],segments=72,rings=48;
+      for(let y=0;y<=rings;y++){
+        const v=y/rings,lat=(v-.5)*Math.PI;
+        for(let x=0;x<=segments;x++){
+          const u=x/segments,lon=(u-.5)*Math.PI*2;
+          vertices.push(Math.cos(lat)*Math.sin(lon),Math.sin(lat),Math.cos(lat)*Math.cos(lon),u,1-v);
+        }
+      }
+      for(let y=0;y<rings;y++)for(let x=0;x<segments;x++){
+        const a=y*(segments+1)+x,b=a+segments+1;
+        indices.push(a,a+1,b,b,a+1,b+1);
+      }
+      vertexBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);
+      indexBuffer=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices),gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(positionLoc);gl.vertexAttribPointer(positionLoc,3,gl.FLOAT,false,20,0);
+      gl.enableVertexAttribArray(uvLoc);gl.vertexAttribPointer(uvLoc,2,gl.FLOAT,false,20,12);
+      earthTexture=gl.createTexture();gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,earthTexture);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([25,73,99,255]));
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+      gl.uniform1i(textureLoc,0);
+      const image=new Image();image.crossOrigin="anonymous";
+      image.onload=()=>{if(disposed)return;gl.bindTexture(gl.TEXTURE_2D,earthTexture);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,image);gl.generateMipmap(gl.TEXTURE_2D);textureReady=true};
+      image.onerror=()=>{textureFailed=true};
+      image.src=EARTH_TEXTURE;
+    }
+    function project(lat,lon){
+      const la=lat*Math.PI/180, dl=(lon-lon0)*Math.PI/180, c0=lat0*Math.PI/180;
+      const x=Math.cos(la)*Math.sin(dl), y=Math.sin(la)*Math.cos(c0)-Math.cos(la)*Math.cos(dl)*Math.sin(c0);
+      const z=Math.sin(la)*Math.sin(c0)+Math.cos(la)*Math.cos(dl)*Math.cos(c0);
+      return {x:width/2+x*radius,y:height/2-y*radius,z};
+    }
+    function draw(){
+      const rect=canvas.getBoundingClientRect();if(!rect.width||!rect.height)return;
+      width=rect.width;height=rect.height;
+      const dpr=Math.min(window.devicePixelRatio||1,2);
+      if(canvas.width!==Math.round(width*dpr)||canvas.height!==Math.round(height*dpr)){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr)}
+      if(overlay.width!==Math.round(width*dpr)||overlay.height!==Math.round(height*dpr)){overlay.width=Math.round(width*dpr);overlay.height=Math.round(height*dpr)}
+      ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+      radius=Math.min(width*.36,height*.42)*zoom;
+      const cx=width/2,cy=height/2;
+      if(gl){
+        const dpr=Math.min(window.devicePixelRatio||1,2);
+        gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);
+        gl.useProgram(shaderProgram);gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
+        gl.enableVertexAttribArray(positionLoc);gl.vertexAttribPointer(positionLoc,3,gl.FLOAT,false,20,0);gl.enableVertexAttribArray(uvLoc);gl.vertexAttribPointer(uvLoc,2,gl.FLOAT,false,20,12);
+        gl.uniform2f(rotationLoc,-lon0*Math.PI/180,lat0*Math.PI/180);gl.uniform1f(aspectLoc,width/height);gl.uniform1f(zoomLoc,zoom);gl.uniform1f(readyLoc,textureReady?1:0);
+        gl.drawElements(gl.TRIANGLES,72*48*6,gl.UNSIGNED_SHORT,0);
+      }
+      ctx.save();ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.clip();
+      ctx.strokeStyle="rgba(220,244,250,.38)";ctx.lineWidth=.8;
+      for(let lat=-60;lat<=60;lat+=30){ctx.beginPath();let drawing=false;for(let lon=-180;lon<=180;lon+=3){const p=project(lat,lon);if(p.z>0){if(!drawing){ctx.moveTo(p.x,p.y);drawing=true}else ctx.lineTo(p.x,p.y)}else drawing=false}ctx.stroke()}
+      for(let lon=-150;lon<180;lon+=30){ctx.beginPath();let drawing=false;for(let lat=-88;lat<=88;lat+=3){const p=project(lat,lon);if(p.z>0){if(!drawing){ctx.moveTo(p.x,p.y);drawing=true}else ctx.lineTo(p.x,p.y)}else drawing=false}ctx.stroke()}
+      for(let i=0;i<stops.length-1;i++){
+        const a=stops[i],b=stops[i+1];ctx.beginPath();ctx.setLineDash([4,4]);ctx.strokeStyle="#f4d06f";ctx.lineWidth=2;
+        let started=false;
+        for(let t=0;t<=1.001;t+=.025){const la=a.lat+(b.lat-a.lat)*t,lo=a.lon+(b.lon-a.lon)*t,p=project(la,lo);if(p.z>.025){if(!started){ctx.moveTo(p.x,p.y);started=true}else ctx.lineTo(p.x,p.y)}else started=false}
+        ctx.stroke();ctx.setLineDash([]);
+      }
+      stops.forEach((s,i)=>{const p=project(s.lat,s.lon);if(p.z<=0)return;ctx.beginPath();ctx.arc(p.x,p.y,i===active?8:6,0,Math.PI*2);ctx.fillStyle=i===active?"#ff5948":"#f5c542";ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=i===active?17:9;ctx.fill();ctx.shadowBlur=0;ctx.fillStyle="#fff";ctx.font="bold 9px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(i+1),p.x,p.y)});
+      ctx.restore();
+      ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.strokeStyle="rgba(135,199,222,.72)";ctx.lineWidth=2;ctx.stroke();
+      const aura=ctx.createRadialGradient(cx,cy,radius*.94,cx,cy,radius*1.12);aura.addColorStop(0,"rgba(70,160,200,.2)");aura.addColorStop(1,"rgba(40,130,190,0)");ctx.beginPath();ctx.arc(cx,cy,radius*1.13,0,Math.PI*2);ctx.fillStyle=aura;ctx.fill();
+      if(textureFailed){ctx.fillStyle="#ffffffcc";ctx.font="12px Arial";ctx.textAlign="center";ctx.fillText("Impossibile caricare la texture satellitare",cx,height-28)}
+    }
+    function animate(){if(disposed)return;draw();raf=requestAnimationFrame(animate)}
+    overlay.addEventListener("pointerdown",e=>{overlay.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1){drag={x:e.clientX,y:e.clientY};down={x:e.clientX,y:e.clientY}}else if(pointers.size===2){down=null;const a=[...pointers.values()];pinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}});
+    overlay.addEventListener("pointermove",e=>{
+      if(!pointers.has(e.pointerId))return;
+      pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pointers.size===1&&drag){lon0-=(e.clientX-drag.x)*.42;lat0=Math.max(-75,Math.min(75,lat0+(e.clientY-drag.y)*.35));drag={x:e.clientX,y:e.clientY};draw()}
+      else if(pointers.size===2){const a=[...pointers.values()],distance=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(pinch){zoom=Math.max(.75,Math.min(1.8,zoom*distance/pinch));draw()}pinch=distance}
+    });
+    overlay.addEventListener("pointerup",e=>{
+      const dx=down?e.clientX-down.x:99,dy=down?e.clientY-down.y:99;
+      if(Math.hypot(dx,dy)<5&&pointers.size===1){const rect=overlay.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;let best=-1,bestDistance=20;stops.forEach((s,i)=>{const p=project(s.lat,s.lon);const d=p.z>0?Math.hypot(p.x-x,p.y-y):Infinity;if(d<bestDistance){best=i;bestDistance=d}});if(best>=0)onSelect(best)}
+      pointers.delete(e.pointerId);drag=null;down=null;pinch=0;
+    });
+    overlay.addEventListener("pointercancel",e=>{pointers.delete(e.pointerId);drag=null;down=null;pinch=0});
+    overlay.addEventListener("wheel",e=>{e.preventDefault();zoom=Math.max(.75,Math.min(1.8,zoom*(e.deltaY<0?1.08:.92)));draw()},{passive:false});
+    globeObserver=new ResizeObserver(draw);globeObserver.observe(overlay);animate();
+    globeCleanup=()=>{
+      disposed=true;cancelAnimationFrame(raf);
+      if(globeObserver){globeObserver.disconnect();globeObserver=null}
+      pointers.clear();overlay.remove();
+      if(gl){gl.deleteBuffer(vertexBuffer);gl.deleteBuffer(indexBuffer);gl.deleteTexture(earthTexture);gl.deleteProgram(shaderProgram)}
+      globeCleanup=null;
+    };
+  }
+  function render(){
+    if(globeCleanup){globeCleanup();globeCleanup=null}
+    nav.querySelectorAll("button").forEach(b=>{if(b.dataset.page===page)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+    if(page==="home"){
+      content.innerHTML=`<div class="ls-wrap ls-home"><div class="ls-map">
+        <svg class="ls-wires" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="47" x2="20" y2="49"/><line x1="50" y1="47" x2="81" y2="29"/><line x1="50" y1="47" x2="80" y2="74"/><line x1="50" y1="47" x2="50" y2="12"/><line x1="20" y1="49" x2="6" y2="10"/><line x1="20" y1="49" x2="6" y2="28"/><line x1="20" y1="49" x2="6" y2="47"/><line x1="20" y1="49" x2="6" y2="66"/><line x1="20" y1="49" x2="6" y2="85"/></svg>
+        <a class="ls-node ls-center" href="#home"><b>L'UOMO<br>E LA NATURA</b><small>Giacomo Leopardi · web-book interattivo</small></a>
+        <a class="ls-node ls-n-vita" href="#vita" data-page="vita"><b>Vita di Leopardi</b></a>
+        <a class="ls-node ls-n-dialogo" href="#dialogo" data-page="dialogo"><b>Dialogo della Natura e di un Islandese</b></a>
+        <a class="ls-node ls-n-giochi" href="#giochi" data-page="giochi"><b>Quiz &amp; Giochi</b></a>
+        <a class="ls-node ls-n-materie" href="#materie" data-page="materie"><b>Mappa delle Materie</b></a>
+        ${timeline.map((e,i)=>`<a class="ls-node ls-n-bio b${i+1}" href="#vita" data-page="vita" data-event="${i}"><b>${e[0].split("–")[0]}</b><small>${e[0].split("–")[1]}</small></a>`).join("")}
+      </div><p class="ls-hint">Tocca una pallina per entrare nel capitolo.</p></div>`;
+    } else if(page==="vita"){
+      content.innerHTML=`<div class="ls-wrap">${heading("I","La vita di Leopardi","Segui le tappe della sua vita: dietro le date ci sono partenze mancate, incontri, studio e poesia.")}${timeline.map((e,i)=>`<article class="ls-card"><span class="ls-period">${e[0]}</span><h3>${e[1]}</h3><p>${e[2]}</p>${eventOpen===i?`<div class="ls-detail">${e[3].map(d=>`<p>• ${d}</p>`).join("")}<div class="ls-callout"><b>Una domanda per te</b><p>${e[4]}</p>${e[5].map((o,j)=>`<button class="ls-chip" data-event-answer="${j}" data-correct="${e[6]}">${o}</button>`).join("")}<p class="ls-muted" data-event-feedback></p><small>${e[7]}</small></div></div>`:""}<button class="ls-btn" data-open="${i}">${eventOpen===i?"Chiudi la tappa":"Scopri questa tappa"}</button></article>`).join("")}</div>`;
+    } else if(page==="dialogo"){
+      content.innerHTML=`<div class="ls-wrap">${heading("II","Dialogo della Natura e di un Islandese","Un incontro sorprendente, una domanda semplice e una risposta durissima. Leggi il testo, poi passa alla parafrasi.")}<div class="ls-tabs"><button class="ls-chip ${dialogueTab===0?"active":""}" data-dialogue-tab="0">Testo originale</button><button class="ls-chip ${dialogueTab===1?"active":""}" data-dialogue-tab="1">Parafrasi</button><button class="ls-chip" data-speak aria-pressed="${speechReading}">${speechReading?"⏹ Interrompi la lettura":"🔊 Ascolta la parafrasi"}</button></div>${dialogue.map((d,i)=>`<div class="ls-grid2 ls-card"><article class="${dialogueTab===0?"":"ls-hidden"}"><h3>Le parole di Leopardi</h3><p class="ls-quote">${esc(d[0])}</p></article><article class="${dialogueTab===1?"":"ls-hidden"}"><h3>Detto con parole di oggi</h3><p>${esc(d[1])}</p></article><details><summary>Apri il glossario</summary><p><b>Natura:</b> per il Leopardi maturo è «matrigna»: non odia l'uomo, semplicemente non si cura di lui.</p><p><b>Perpetuo circuito:</b> ciclo eterno di nascita e distruzione, in cui ogni cosa vive della distruzione di un'altra.</p><p><b>Linea equinoziale:</b> l'Equatore, nel cuore caldo dell'Africa.</p></details></div>`).join("")}</div>`;
+    } else if(page==="giochi"){
+      content.innerHTML=`<div class="ls-wrap">${heading("III","Mettiti alla prova","Qui non serve saperle tutte: prova, sbaglia, riparti. Oppure segui l'Islandese nel suo viaggio.")}<div class="ls-tabs"><button class="ls-chip ${tab==="quiz"?"active":""}" data-tab="quiz">Quiz finale</button><button class="ls-chip ${tab==="match"?"active":""}" data-tab="match">Abbina</button><button class="ls-chip ${tab==="tf"?"active":""}" data-tab="tf">Vero o Falso</button><button class="ls-chip ${tab==="globe"?"active":""}" data-tab="globe">Viaggio</button></div><div class="ls-card" id="ls-game"></div></div>`;
+      renderGame();
+    } else {
+      const artistTab=subjects.length;
+      const subjectTabs=subjects.map((s,i)=>`<button class="ls-chip ${subject===i?"active":""}" data-subject="${i}">${s[0]}</button>`).join("")+
+        `<button class="ls-chip ${subject===artistTab?"active":""}" data-subject="${artistTab}">🖼️ Artisti dell'800</button>`;
+      const subjectContent=subject===artistTab
+        ? `<div class="ls-callout"><b>Sei incontri, sei modi diversi di guardare il mondo</b><p>Fai un giro tra quadri, musica e idee dell'Ottocento. Per ogni artista trovi il contesto, un filo che lo avvicina a Leopardi e una differenza che aiuta a non confondere le loro voci: sono confronti, non necessariamente influenze dirette.</p></div><div class="ls-artist-list">${artistConnections.map(a=>`<article class="ls-card ls-artist-card"><h3>${esc(a.name)}</h3><p><b>${esc(a.work)}</b></p><p class="ls-artist-meta">${esc(a.place)}</p><div class="ls-artist-block"><h4>Prima, guarda l'opera</h4><p>${esc(a.context)}</p></div><div class="ls-artist-block"><h4>Il filo con Leopardi</h4><p>${esc(a.connection)}</p></div><div class="ls-artist-block"><h4>Dove le strade si dividono</h4><p>${esc(a.difference)}</p></div></article>`).join("")}</div>`
+        : subjects[subject][1].map(b=>`<article class="ls-card"><h3>${b[0]}</h3><p>${b[1]}</p></article>`).join("");
+      content.innerHTML=`<div class="ls-wrap">${heading("IV","Mappa delle Materie","Segui le curiosità: dall'arte ai vulcani, dalle idee alle emozioni. Scegli una traccia e vedi dove ti porta.")}<div class="ls-tabs">${subjectTabs}</div>${subjectContent}</div>`;
+    }
+    content.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",ev=>{ev.preventDefault();go(el.dataset.page);if(el.dataset.event){eventOpen=Number(el.dataset.event);render()}}));
+  }
+  function renderGame(){
+    const box=root.querySelector("#ls-game"); if(!box)return;
+    if(tab==="quiz"){
+      const q=questions[qi];
+      if(qi>=questions.length){
+        let leaderboard="";
+        try {
+          const saved=JSON.parse(localStorage.getItem(scoreKey)||"[]");
+          if(!Array.isArray(saved)||saved.some(r=>!r||typeof r.player_name!=="string"||!Number.isFinite(r.score)||!Number.isFinite(r.total))) throw new Error("I punteggi salvati non sono validi.");
+          const best=[...saved].sort((a,b)=>b.score-a.score).slice(0,5);
+          if(best.length) leaderboard=`<div class="ls-detail"><h3>Migliori punteggi in questo browser</h3>${best.map((r,i)=>`<p>${i+1}. ${esc(r.player_name)} <b>${r.score}/${r.total}</b></p>`).join("")}</div>`;
+        } catch(e) { scoreError=e.message||"Non è stato possibile leggere i punteggi salvati."; }
+        box.innerHTML=`<div class="ls-heading"><h1>${qscore}/${questions.length}</h1><p>${qscore>=7?"Eccellente! Sei un vero leopardiano.":"Rileggi i capitoli e riprova!"}</p></div>${scoreSaved?`<p class="ls-callout">Punteggio salvato in questo browser.</p>`:`<form data-score-form class="ls-tabs"><input class="ls-input" name="name" maxlength="30" placeholder="Il tuo nome" required><button class="ls-btn">Salva il punteggio</button></form>`}${scoreError?`<p role="alert" class="ls-muted">${esc(scoreError)}</p>`:""}${leaderboard}<div class="ls-heading"><button class="ls-btn" data-restart>Rifai il quiz</button></div>`;
+      } else {
+        const q=questions[qi];
+        box.innerHTML=`<p class="ls-muted">${q[0]} · Domanda ${qi+1} di ${questions.length} · Punti: ${qscore}</p><div class="ls-progress"><i style="width:${Math.round(qi/questions.length*100)}%"></i></div><h2>${q[1]}</h2><div class="ls-options">${q[2].map((o,i)=>`<button class="ls-option ${qselected===i?(i===q[3]?"correct":"wrong"):""}" data-qanswer="${i}" ${qselected!==-1?"disabled":""}>${o}</button>`).join("")}</div>${qselected!==-1?`<p>${qselected===q[3]?"Esatto! ":"Non proprio. "}${q[4]}</p><button class="ls-btn" data-next>${qi+1===questions.length?"Vedi il risultato":"Avanti"}</button>`:""}`;
+      }
+    } else if(tab==="match"){
+      const order=pairs.map((_,i)=>i).sort((a,b)=>((a*7+matched.length*3)%11)-((b*7+matched.length*3)%11));
+      box.innerHTML=`<p>Seleziona un concetto a sinistra, poi il collegamento corrispondente.</p><div class="ls-grid2"><div>${pairs.map((p,i)=>`<button class="ls-option ${matched.includes(i)?"correct":matchSelected===i?"selected":""}" data-pick="${i}" ${matched.includes(i)?"disabled":""}>${p[0]}</button>`).join("")}</div><div>${order.map(i=>`<button class="ls-option ${matched.includes(i)?"correct":""}" data-match="${i}" ${matched.includes(i)?"disabled":""}>${pairs[i][1]}</button>`).join("")}</div></div><p>Abbinati: ${matched.length}/${pairs.length} · Errori: ${errors}</p>${matched.length===pairs.length?`<p>Complimenti! Hai collegato tutti i concetti.</p><button class="ls-btn" data-match-reset>Rigioca</button>`:""}`;
+    } else if(tab==="tf"){
+      if(tfIndex>=trueFalse.length){box.innerHTML=`<div class="ls-heading"><h1>${tfScore}/${trueFalse.length}</h1><p>risposte esatte sul Dialogo</p><button class="ls-btn" data-tf-reset>Rigioca</button></div>`;return}
+      const item=trueFalse[tfIndex];
+      box.innerHTML=`<p class="ls-muted">Affermazione ${tfIndex+1} di ${trueFalse.length} · Punti: ${tfScore}</p><div class="ls-callout"><h2>${item[0]}</h2></div>${tfAnswer===null?`<div class="ls-answers"><button class="ls-btn" data-tf="true">✅ Vero</button><button class="ls-btn" data-tf="false">❌ Falso</button></div>`:`<p>${tfAnswer===item[1]?"Esatto! ":"Non proprio. "}${item[2]}</p><button class="ls-btn" data-tf-next>${tfIndex+1===trueFalse.length?"Risultato":"Avanti"}</button>`}`;
+    } else {
+      const stops=[
+        {name:"Islanda",place:"Ghiacciaio Vatnajökull",lat:64.4,lon:-16.8,photo:"Vatnaj%C3%B6kull.jpeg",summary:"La partenza. Nell'isola nativa l'Islandese viveva in solitudine, ma il freddo lungo mesi, l'estate rovente, il fumo del fuoco che gli straziava gli occhi e i ruggiti del monte Ecla (l'Hekla) non gli davano pace. Capisce che anche lontano dagli uomini non si sfugge al disagio, e decide di cambiare luoghi e climi."},
+        {name:"Verso il Polo Nord",place:"Banchisa artica",lat:81,lon:10,photo:"Arctic_pack_ice_at_81%C2%B0_north.jpg",summary:"Nelle sue peregrinazioni è «rappreso dal freddo verso i poli». Il gelo è un nemico tanto quanto il caldo: cambia il clima, ma non la sofferenza."},
+        {name:"I Tropici",place:"Foresta amazzonica",lat:-3.5,lon:-62,photo:"Amazon17_%285641020319%29.jpg",summary:"Tra i tropici è «arso dal caldo». Bestie selvatiche che lo vogliono divorare, serpenti velenosi, insetti che quasi lo consumano fino alle ossa: la natura rigogliosa è anche la più pericolosa."},
+        {name:"Il deserto africano",place:"Dune del Sahara (Erg Chebbi)",lat:31.1,lon:-4,photo:"Merzouga_Dunes_2011.jpg",summary:"Si addentra nel grande deserto: caldo, vento, sabbia. Qui, dove non c'è nessuno a disturbarlo, spera di trovare finalmente quiete. Il testo non indica il punto esatto: il Sahara è la tappa più evocativa del cammino verso l'interno dell'Africa."},
+        {name:"L'Equatore, interno dell'Africa",place:"Monti Ruwenzori",lat:0.4,lon:29.9,photo:"1172_ruwenzori.jpg",summary:"L'incontro. «Passando sotto la linea equinoziale», in un luogo mai raggiunto da alcun uomo, l'Islandese vede una gigantesca donna seduta contro una montagna: è la Natura. A lei rivolge le sue proteste e riceve la risposta più dura: il mondo non è fatto per gli uomini."}
+      ];
+      const place=stops[selectedStop];
+      box.innerHTML=`<div class="ls-globe-controls"><p>Trascina per ruotare, pizzica o usa la rotella per lo zoom. Tocca un pallino per seguire l'Islandese.</p></div><div class="ls-earth"><canvas aria-label="Globo interattivo con le tappe del viaggio dell'Islandese"></canvas><span class="ls-earth-hint">Trascina per ruotare · rotella o gesto a due dita per lo zoom · tocca un punto per aprire la tappa</span></div><div class="ls-tabs">${stops.map((s,i)=>`<button class="ls-chip ${selectedStop===i?"active":""}" data-stop="${i}">${i+1}. ${s.name}</button>`).join("")}</div>${place?`<article class="ls-card ls-stop-card"><img class="ls-stop-image" src="https://commons.wikimedia.org/wiki/Special:FilePath/${stops[selectedStop].photo}?width=900" alt="${esc(place.place)}"><div class="ls-stop-copy"><button class="ls-stop-close" data-close-stop aria-label="Chiudi la tappa">×</button><span class="ls-stop-number">TAPPA ${selectedStop+1} DI 5</span><h2 class="ls-stop-name">${esc(place.name)}</h2><p class="ls-stop-place">${esc(place.place)}</p><p class="ls-stop-summary">${esc(place.summary)}</p><p class="ls-photo-credit">Foto: Wikimedia Commons</p></div></article>`:""}`;
+      const canvas=box.querySelector("canvas");
+      drawGlobe(canvas,stops,selectedStop,index=>{selectedStop=index;renderGame()});
+      box.querySelectorAll("[data-stop]").forEach(b=>b.addEventListener("click",()=>{selectedStop=Number(b.dataset.stop);renderGame()}));
+      const image=box.querySelector(".ls-stop-image");
+      if(image)image.addEventListener("error",()=>{image.removeAttribute("src");image.alt=place.place+" · fotografia non disponibile";image.style.opacity=".15"},{once:true});
+    }
+  }
+  root.addEventListener("click",function(e){
+    const t=e.target.closest("button"); if(!t)return;
+    if(t.dataset.open!==undefined){eventOpen=eventOpen===Number(t.dataset.open)?-1:Number(t.dataset.open);render()}
+    if(t.dataset.eventAnswer!==undefined){const event=timeline[eventOpen];const f=root.querySelector("[data-event-feedback]");f.textContent=Number(t.dataset.eventAnswer)===event[6]?"Esatto! "+event[7]:"Non proprio. "+event[7];}
+    if(t.dataset.tab){tab=t.dataset.tab;render();return}
+    if(t.dataset.dialogueTab!==undefined){dialogueTab=Number(t.dataset.dialogueTab);render()}
+    if(t.hasAttribute("data-speak")){if("speechSynthesis"in window){if(speechReading){speechSynthesis.cancel();speechReading=false;t.textContent="🔊 Leggi la parafrasi";t.setAttribute("aria-pressed","false")}else{const utterance=new SpeechSynthesisUtterance(dialogue.map(d=>d[1]).join(" "));utterance.onend=utterance.onerror=()=>{speechReading=false;const button=root.querySelector("[data-speak]");if(button){button.textContent="🔊 Leggi la parafrasi";button.setAttribute("aria-pressed","false")}};speechReading=true;t.textContent="⏹ Interrompi la lettura";t.setAttribute("aria-pressed","true");speechSynthesis.speak(utterance)}}else alert("La lettura vocale non è disponibile in questo browser.")}
+    if(t.dataset.qanswer!==undefined){const i=Number(t.dataset.qanswer);if(qselected===-1){qselected=i;if(i===questions[qi][3])qscore++;renderGame()}}
+    if(t.hasAttribute("data-next")){qi++;qselected=-1;renderGame()}
+    if(t.hasAttribute("data-restart")){qi=0;qscore=0;qselected=-1;scoreSaved=false;scoreError="";renderGame()}
+    if(t.dataset.pick!==undefined){matchSelected=Number(t.dataset.pick);renderGame()}
+    if(t.dataset.match!==undefined){const i=Number(t.dataset.match);if(matchSelected>=0){if(matchSelected===i)matched.push(i);else errors++;matchSelected=-1;renderGame()}}
+    if(t.hasAttribute("data-match-reset")){matched=[];errors=0;matchSelected=-1;renderGame()}
+    if(t.dataset.tf!==undefined){tfAnswer=t.dataset.tf==="true";if(tfAnswer===trueFalse[tfIndex][1])tfScore++;renderGame()}
+    if(t.hasAttribute("data-tf-next")){tfIndex++;tfAnswer=null;renderGame()}
+    if(t.hasAttribute("data-tf-reset")){tfIndex=0;tfScore=0;tfAnswer=null;renderGame()}
+    if(t.dataset.subject!==undefined){subject=Number(t.dataset.subject);render()}
+    if(t.dataset.stop!==undefined){selectedStop=Number(t.dataset.stop);renderGame()}
+    if(t.hasAttribute("data-close-stop")){selectedStop=-1;renderGame()}
+  });
+  root.addEventListener("submit",function(e){
+    const form=e.target.closest("[data-score-form]"); if(!form)return;
+    e.preventDefault();
+    const name=new FormData(form).get("name").trim();
+    if(!name)return;
+    try{
+      const saved=JSON.parse(localStorage.getItem(scoreKey)||"[]");
+      if(!Array.isArray(saved))throw new Error("I punteggi salvati non sono validi.");
+      saved.push({player_name:name.slice(0,30),score:qscore,total:questions.length});
+      localStorage.setItem(scoreKey,JSON.stringify(saved));
+      scoreSaved=true;scoreError="";
+    }catch(error){scoreError=error.message||"Non è stato possibile salvare il punteggio in questo browser."}
+    renderGame();
+  });
+  window.addEventListener("scroll",function(){const r=root.getBoundingClientRect(),h=root.offsetHeight-window.innerHeight;root.querySelector(".ls-progress i").style.width=(h>0?Math.max(0,Math.min(100,(-r.top/h)*100)):0)+"%"},{passive:true});
+  root.querySelectorAll(".ls-links button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
+  root.querySelector(".ls-brand").addEventListener("click",function(e){e.preventDefault();go("home")});
+  render();
+})();
+</script>
