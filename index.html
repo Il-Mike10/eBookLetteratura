@@ -306,6 +306,11 @@
       ["Leopardi e Schopenhauer","Schopenhauer individua una Volontà cieca alla radice del dolore; Leopardi descrive una Natura che produce e distrugge senza intenzione. La risposta leopardiana include lucidità, poesia e social catena."],
       ["Eco-ansia: l'Islandese di oggi","L'Islandese fugge da luoghi ostili e vive in allerta: un'immagine che può ricordare la preoccupazione contemporanea per i cambiamenti ambientali."],
       ["Una differenza importante","La Natura leopardiana è indifferente, non «cattiva». Oggi molte alterazioni del clima dipendono invece dalle attività umane."]
+    ]],
+    ["🏛️ Educazione Civica",[
+      ["Salute mentale, inclusione e condizione giovanile (Art. 32)","L'isolamento vissuto da Leopardi a Recanati, le difficoltà fisiche e il senso di alienazione rendono attuali il bisogno di benessere interiore, di ascolto e di relazioni autentiche. Questo confronto parte dalla sua esperienza, senza attribuirgli diagnosi contemporanee."],
+      ["Il diritto alla salute","L'articolo 32 della Costituzione tutela la salute come diritto fondamentale: la riflessione può includere anche il benessere psicologico dei giovani e l'importanza di poter chiedere e ricevere sostegno."],
+      ["Una scuola che accoglie","Isolamento sociale e hikikomori, bullismo e cyberbullismo richiedono attenzione e responsabilità condivise. Ascolto, rispetto, prevenzione e collaborazione aiutano a costruire comunità scolastiche sicure e inclusive."]
     ]]
   ];
   const artistConnections = [
@@ -366,7 +371,7 @@
       difference:"Verne costruisce un'avventura in cui intraprendenza e mezzi tecnici permettono di superare gli imprevisti. Nel Dialogo leopardiano, invece, il viaggio mostra che nessun luogo mette l'uomo al riparo dalla Natura: il confronto accosta due visioni letterarie, non indica un'influenza diretta."
     }
   ];
-  let page="home", eventOpen=-1, tab="quiz", qi=0, qscore=0, qselected=-1, scoreSaved=false, scoreError="", tfIndex=0, tfScore=0, tfAnswer=null, matchSelected=-1, matched=[], errors=0, subject=0, dialogueTab=0, selectedStop=-1, speechReading=false;
+  let page="home", eventOpen=-1, tab="quiz", qi=0, qscore=0, qselected=-1, scoreSaved=false, scoreError="", tfIndex=0, tfScore=0, tfAnswer=null, matchSelected=-1, matched=[], errors=0, subject=subjects.findIndex(entry=>entry[0].includes("Educazione Civica")), dialogueTab=0, selectedStop=-1, speechReading=false;
   const scoreKey="leopardi-webbook-quiz-results";
   const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   function heading(n,title,sub){return `<div class="ls-heading"><span class="ls-number">Capitolo ${n}</span><h1>${title}</h1><p>${sub}</p></div>`}
